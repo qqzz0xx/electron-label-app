@@ -2,3 +2,32 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 pnpm commitlint --edit $1
+
+
+# Define the emoji prefix based on the commit type
+if grep -q "^feat:" "$1"; then
+  EMOJI_PREFIX="✨ "
+elif grep -q "^fix:" "$1"; then
+  EMOJI_PREFIX="🐛 "
+elif grep -q "^docs:" "$1"; then
+  EMOJI_PREFIX="📝 "
+elif grep -q "^style:" "$1"; then
+  EMOJI_PREFIX="💄 "
+elif grep -q "^refactor:" "$1"; then
+  EMOJI_PREFIX="🔨 "
+elif grep -q "^perf:" "$1"; then
+  EMOJI_PREFIX="🚀 "
+elif grep -q "^test:" "$1"; then
+  EMOJI_PREFIX="🧪 "
+elif grep -q "^build:" "$1"; then
+  EMOJI_PREFIX="🔧 "
+elif grep -q "^ci:" "$1"; then
+  EMOJI_PREFIX="🚦 "
+elif grep -q "^chore:" "$1"; then
+  EMOJI_PREFIX="🧹 "
+else
+  EMOJI_PREFIX="💊 "
+fi
+
+# Add the emoji prefix to the commit message file
+echo "$EMOJI_PREFIX$(cat $1)" > $1
