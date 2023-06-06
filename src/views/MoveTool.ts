@@ -4,7 +4,7 @@ import { vec2 } from 'gl-matrix'
 import { throttle } from '../utils'
 import KonvaEditor from './KonvaEditor'
 
-class ZoomTool extends ToolBase {
+class MoveTool extends ToolBase {
   state: boolean
   prevPos?: vec2
 
@@ -17,10 +17,10 @@ class ZoomTool extends ToolBase {
       if (!this.prevPos) return
       const d = vec2.create()
       vec2.sub(d, pos, this.prevPos)
-      const scale = d[1] / 2000
+      //   const scale = d[1] / 2000
+      //   const zoom = this.editor.stage.scaleX()
+      //   this.editor.setZoom(zoom * (1 + scale))
 
-      const zoom = this.editor.stage.scaleX()
-      this.editor.setZoom(zoom * (1 + scale))
       this.prevPos = pos
     }, 100)
   }
@@ -47,4 +47,4 @@ class ZoomTool extends ToolBase {
   }
 }
 
-export default ZoomTool
+export default MoveTool

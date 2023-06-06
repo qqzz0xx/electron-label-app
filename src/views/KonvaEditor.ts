@@ -17,6 +17,7 @@ class KonvaEditor {
       width: root.offsetWidth,
       height: root.offsetHeight
     })
+    // this.stage.container().style.backgroundColor = 'red';
 
     this.layer = new konva.Layer()
     this.stage.add(this.layer)
@@ -74,7 +75,8 @@ class KonvaEditor {
   }
 
   setZoom(zoom: number) {
-    zoom = Math.max(0, zoom)
+    zoom = Math.max(0.1, zoom)
+
     this.stage.scale({
       x: zoom,
       y: zoom
