@@ -4,15 +4,15 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/build.yml"
+      - '**.md'
+      - '**.spec.js'
+      - '.idea'
+      - '.vscode'
+      - '.dockerignore'
+      - 'Dockerfile'
+      - '.gitignore'
+      - '.github/**'
+      - '!.github/workflows/build.yml'
 
 jobs:
   build:
@@ -31,17 +31,35 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install windows build-tools 
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Install macos build-tools 
+        if: matrix.os == 'macos-latest'
+        run: brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
+
+      - name: Install ubuntu build-tools 
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
+      - name: Install pnpm
+        run: npm install --global pnpm
+
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Build Release Files
-        run: npm run build
+        run: pnpm build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package.json info
+        uses: rexdefuror/read-package-json@v1.0.5
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release_on_${{ matrix. os }}
-          path: release/
+          name: release_on_${{ matrix.os }}
+          path: release/${{ env.PACKAGE_VERSION }}/${{ env.PACKAGE_NAME }}_${{ env.PACKAGE_VERSION }}.*
           retention-days: 5

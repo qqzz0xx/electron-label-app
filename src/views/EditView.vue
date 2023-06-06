@@ -1,26 +1,80 @@
 <template>
-  <div class="EditView" ref="rootEl"></div>
+  <div class="EditView">
+    <div class="bar">
+      <button @click="handleAdd">+</button>
+      <button @click="handleSub">-</button>
+      <button @click="handleFit">fit</button>
+    </div>
+    <div class="root" ref="rootEl"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
-
+import { nextTick, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import Editor from './Editor'
-const rootEl = ref<HTMLDivElement>()
+import { useInputFileStore } from '../stores/useInputFileStore'
+import { storeToRefs } from 'pinia'
+import KonvaEditor from './KonvaEditor'
 
-const editor = ref<Editor>()
+const { currentFile } = storeToRefs(useInputFileStore())
+
+const rootEl = ref<HTMLDivElement>()
+const editor = ref<KonvaEditor>()
+
+const zoom = ref(1)
+
+const handleAdd = () => {
+  zoom.value = zoom.value + 0.1
+}
+
+const handleSub = () => {
+  zoom.value = zoom.value - 0.1
+}
+const handleFit = () => {
+  editor.value?.fitZoom()
+}
+
+watch(zoom, () => {
+  editor.value?.setZoom(zoom.value)
+})
 
 onMounted(() => {
   if (rootEl.value) {
-    editor.value = new Editor(rootEl.value)
+    editor.value = new KonvaEditor(rootEl.value)
+  }
+})
+
+watch(currentFile, () => {
+  if (currentFile.value) {
+    const image = new Image()
+    const url = URL.createObjectURL(currentFile.value)
+    image.src = url
+    image.onload = () => {
+      editor.value?.addMainImage(image)
+      URL.revokeObjectURL(url)
+    }
   }
 })
 </script>
 
 <style lang="less" scoped>
 .EditView {
-  width: 100%;
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+
+  .bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    padding: 8px;
+    gap: 20px;
+  }
+
+  .root {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

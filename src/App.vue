@@ -1,11 +1,13 @@
 <template>
-  <EditView></EditView>
+  <div class="container">
+    <RouterView> </RouterView>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ipcRenderer } from 'electron'
-import HelloWorld from './components/HelloWorld.vue'
-import EditView from './views/EditView.vue'
+import { useInputFileStore } from './stores/useInputFileStore'
+
+const { setFiles } = useInputFileStore()
 
 console.log('[App.vue]', `Hello world from Electron ${process.versions.electron}!`)
 
@@ -15,20 +17,14 @@ window.addEventListener('dragover', (e) => {
 
 window.addEventListener('drop', (e) => {
   if (e.dataTransfer) {
-    // 向主进程发送消息并传递文件路径
-    for (const file of e.dataTransfer.files) {
-      // 向主进程发送消息并传递文件路径
-      // ipcRenderer.send("open-file", file.path);
-
-      console.log(file)
-    }
+    setFiles(Array.from(e.dataTransfer.files))
   }
 })
 </script>
 
 <style lang="less" scoped>
-#app {
-  width: 100%;
-  height: 100%;
+.container {
+  display: flex;
+  flex: 1;
 }
 </style>
