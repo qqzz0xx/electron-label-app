@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Konva from 'konva'
 import KonvaEditor from './KonvaEditor'
+import hotkeys from 'hotkeys-js'
 
 export interface Position {
   realX: number
@@ -44,6 +45,7 @@ class ToolBase {
     if (enable) {
       stage.on('mousedown', this.mousedownHandler)
       stage.on('mouseup', this.mouseupHandler)
+      stage.on('mousemove', this.mousemoveHandler)
       stage.on('mousemove', this.mousemoveHandler)
     } else {
       stage.off('mousedown', this.mousedownHandler)

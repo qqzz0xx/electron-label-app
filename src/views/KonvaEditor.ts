@@ -1,25 +1,29 @@
-import konva from 'konva'
+import Konva from 'konva'
 import ToolBase from './ToolBase'
 import RectangleTool from './RectangleTool'
 import ZoomTool from './ZoomTool'
+import { clamp } from '../utils/math'
 
 class KonvaEditor {
-  stage: konva.Stage
-  layer: konva.Layer
+  stage: Konva.Stage
+  layer: Konva.Layer
+  mainLayer: Konva.Layer
 
-  mainImage?: konva.Image
+  mainImage?: Konva.Image
 
   tools: ToolBase[] = []
 
   constructor(root: HTMLDivElement) {
-    this.stage = new konva.Stage({
+    this.stage = new Konva.Stage({
       container: root,
       width: root.offsetWidth,
       height: root.offsetHeight
     })
     // this.stage.container().style.backgroundColor = 'red';
 
-    this.layer = new konva.Layer()
+    this.mainLayer = new Konva.Layer()
+    this.stage.add(this.mainLayer)
+    this.layer = new Konva.Layer()
     this.stage.add(this.layer)
 
     window.addEventListener('resize', () => {
@@ -40,7 +44,7 @@ class KonvaEditor {
   }
 
   addImage(image: HTMLImageElement) {
-    const kImage = new konva.Image({
+    const kImage = new Konva.Image({
       image,
       width: image.width,
       height: image.height
@@ -51,7 +55,17 @@ class KonvaEditor {
   }
 
   addMainImage(image: HTMLImageElement) {
-    this.mainImage = this.addImage(image)
+    if (this.mainImage) {
+      this.mainImage.remove()
+    }
+    const kImage = new Konva.Image({
+      image,
+      width: image.width,
+      height: image.height
+    })
+
+    this.mainLayer.add(kImage)
+    this.mainImage = kImage
   }
 
   fitZoom() {
@@ -75,7 +89,7 @@ class KonvaEditor {
   }
 
   setZoom(zoom: number) {
-    zoom = Math.max(0.1, zoom)
+    zoom = clamp(0.1, 40, zoom)
 
     this.stage.scale({
       x: zoom,
