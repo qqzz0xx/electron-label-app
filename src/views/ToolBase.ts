@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Konva from 'konva'
 import KonvaEditor from './KonvaEditor'
-import hotkeys from 'hotkeys-js'
 
 export interface Position {
   realX: number

@@ -1,9 +1,14 @@
 <template>
-  <div class="HomeView"></div>
+  <div class="HomeView">
+    <MprView></MprView>
+  </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MprView from './mpr/index.vue'
+</script>
 <style lang="less" scoped>
 .HomeView {
-  background-color: rgb(51, 180, 12);
+  display: flex;
+  flex: 1;
 }
 </style>

@@ -3,7 +3,11 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
+import path from 'path'
+import { fileURLToPath, URL } from 'node:url'
 import pkg from './package.json'
+
+const itkConfig = path.resolve(__dirname, 'src', 'itkConfig.js')
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -60,6 +64,7 @@ export default defineConfig(({ command }) => {
       // Use Node.js API in the Renderer-process
       renderer()
     ],
+
     server:
       process.env.VSCODE_DEBUG &&
       (() => {

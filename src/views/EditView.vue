@@ -10,13 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
-import Editor from './Editor'
+import { onMounted, ref, watch } from 'vue'
 import { useInputFileStore } from '../stores/useInputFileStore'
 import { storeToRefs } from 'pinia'
 import KonvaEditor from './KonvaEditor'
+import { useMainImageData } from '../stores/useMainImageData'
 
 const { currentFile } = storeToRefs(useInputFileStore())
+const { loadMainImage } = useMainImageData()
 
 const rootEl = ref<HTMLDivElement>()
 const editor = ref<KonvaEditor>()
@@ -46,12 +47,17 @@ onMounted(() => {
 
 watch(currentFile, () => {
   if (currentFile.value) {
-    const image = new Image()
-    const url = URL.createObjectURL(currentFile.value)
-    image.src = url
-    image.onload = () => {
-      editor.value?.addMainImage(image)
-      URL.revokeObjectURL(url)
+    const mineType = currentFile.value.type.toLowerCase()
+    if (mineType.startsWith('image')) {
+      const image = new Image()
+      const url = URL.createObjectURL(currentFile.value)
+      image.src = url
+      image.onload = () => {
+        editor.value?.addMainImage(image)
+        URL.revokeObjectURL(url)
+      }
+    } else {
+      loadMainImage(currentFile.value)
     }
   }
 })
