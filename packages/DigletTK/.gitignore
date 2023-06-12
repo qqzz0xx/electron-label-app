@@ -1,0 +1,9 @@
+/node_modules/
+/templates/
+/.vscode/
+
+/docs/examples/test_*
+/docs/examples/demo/thorax*
+/docs/examples/demo/abdomen*
+/docs/documentation
+/docs/examples/demo
