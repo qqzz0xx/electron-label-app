@@ -55,10 +55,14 @@ export class MPRView extends baseView {
     this._cachedSliceViewUp = [...this.sliceViewUp]
 
     this._genericRenderWindow = vtkGenericRenderWindow.newInstance({
-      background: [0, 0, 0]
+      background: [0, 0, 0],
+      listenWindowResize: true
     })
 
     this._genericRenderWindow.setContainer(element)
+    this._genericRenderWindow
+      .getOpenGLRenderWindow()
+      .setSize(element.offsetWidth, element.offsetHeight)
 
     this._renderWindow = this._genericRenderWindow.getRenderWindow()
     this._renderer = this._genericRenderWindow.getRenderer()

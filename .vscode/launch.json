@@ -7,10 +7,7 @@
     {
       "name": "Debug App",
       "preLaunchTask": "Before Debug",
-      "configurations": [
-        "Debug Main Process",
-        "Debug Renderer Process"
-      ],
+      "configurations": ["Debug Main Process", "Debug Renderer Process"],
       "presentation": {
         "hidden": false,
         "group": "",
@@ -21,6 +18,13 @@
   ],
   "configurations": [
     {
+      "name": "Launch Chrome",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "name": "Debug Main Process",
       "type": "node",
       "request": "launch",
@@ -28,10 +32,7 @@
       "windows": {
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
       },
-      "runtimeArgs": [
-        "--remote-debugging-port=9229",
-        "."
-      ],
+      "runtimeArgs": ["--remote-debugging-port=9229", "."],
       "envFile": "${workspaceFolder}/.vscode/.debug.env",
       "console": "integratedTerminal"
     },
@@ -48,6 +49,6 @@
         // Skip files in host(VITE_DEV_SERVER_URL)
         "http://127.0.0.1:3344/**"
       ]
-    },
+    }
   ]
 }

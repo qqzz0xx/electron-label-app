@@ -12,6 +12,7 @@ export const useMainImageData = defineStore('useMainImageData', () => {
 
   const loadMainImage = async (file: File) => {
     mainImageData.value = await itkReadFile(file)
+    console.log('main image', mainImageData.value.toJSON())
   }
 
   return {

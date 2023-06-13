@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container max-w-none">
     <RouterView> </RouterView>
   </div>
 </template>
@@ -9,7 +9,7 @@ import { useInputFileStore } from './stores/useInputFileStore'
 
 const { setFiles } = useInputFileStore()
 
-console.log('[App.vue]', `Hello world from Electron ${process.versions.electron}!`)
+// console.log('[App.vue]', `Hello world from Electron ${process.versions.electron}!`)
 
 window.addEventListener('dragover', (e) => {
   e.preventDefault()
