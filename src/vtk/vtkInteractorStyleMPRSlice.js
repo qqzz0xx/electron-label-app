@@ -7,6 +7,7 @@ import vtkMouseCameraTrackballRotateManipulator from '@kitware/vtk.js/Interactio
 import vtkMouseCameraTrackballPanManipulator from '@kitware/vtk.js/Interaction/Manipulators/MouseCameraTrackballPanManipulator'
 import vtkMouseCameraTrackballZoomManipulator from '@kitware/vtk.js/Interaction/Manipulators/MouseCameraTrackballZoomManipulator'
 import vtkMouseRangeManipulator from '@kitware/vtk.js/Interaction/Manipulators/MouseRangeManipulator'
+import vtkCoordinate from '@kitware/vtk.js/Rendering/Core/Coordinate'
 
 // Global methods
 // ----------------------------------------------------------------------------
@@ -115,9 +116,20 @@ function InteractorStyleMPRSlice(publicAPI, model) {
 
   publicAPI.handleLeftButtonPress = macro.chain(publicAPI.handleLeftButtonPress, function (ev) {
     console.log(ev)
-    // const renderer = model._interactor.getCurrentRenderer()
-    // const camera = renderer.getActiveCamera()
-    // ev.position
+    const pos = ev.position
+    const renderer = model._interactor.getCurrentRenderer()
+    // const worldPos = renderer.viewToWorld(pos.x, pos.y, pos.z)
+
+    const coord = vtkCoordinate.newInstance()
+    coord.setRenderer(renderer)
+    coord.setCoordinateSystemToDisplay()
+    coord.setValue([pos.x, pos.y, pos.z])
+    const worldPos = coord.getComputedWorldValue()
+
+    const bounds = model.volumeMapper.getBounds()
+    const volumePos = [worldPos[0] - bounds[0], worldPos[1] - bounds[2], worldPos[2] - bounds[4]]
+
+    console.log(bounds, pos, worldPos, volumePos)
   })
 
   const superSetVolumeMapper = publicAPI.setVolumeMapper

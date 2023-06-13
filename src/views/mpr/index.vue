@@ -36,10 +36,10 @@ onMounted(async () => {
   }
   // mpr = new diglettk.MPRManager(targetElements)
 
-  await fetch('/test/t1.nii.gz')
+  await fetch('/test/0.nii')
     .then((res) => res.blob())
     .then(async (blob) => {
-      await loadMainImage(new File([blob], '0.nii.gz'))
+      await loadMainImage(new File([blob], '0.nii'))
     })
 
   // const state = mpr.getInitialState()
