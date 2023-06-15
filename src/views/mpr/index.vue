@@ -13,6 +13,7 @@ import { useMainImageData } from '../../stores/useMainImageData'
 import { storeToRefs } from 'pinia'
 import { onMounted, watch } from 'vue'
 import vtkSliceView from '@/vtk/vtkSliceView'
+import vtkView3D from '@/vtk/vtkView3D'
 
 const { mainImageData } = storeToRefs(useMainImageData())
 const { loadMainImage } = useMainImageData()
@@ -47,6 +48,9 @@ onMounted(async () => {
 
   const view = new vtkSliceView(document.getElementById('viewer-1')!)
   view.initView(mainImageData.value!)
+
+  const view3D = new vtkView3D(document.getElementById('viewer-2')!)
+  view3D.initView(mainImageData.value!)
 })
 
 watch(mainImageData, () => {

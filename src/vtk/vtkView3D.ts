@@ -1,10 +1,10 @@
 import vtkImageData from '@kitware/vtk.js/Common/DataModel/ImageData'
+import vtkColorMaps from '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps'
 import vtkVolume from '@kitware/vtk.js/Rendering/Core/Volume'
 import vtkVolumeMapper from '@kitware/vtk.js/Rendering/Core/VolumeMapper'
 import vtkGenericRenderWindow from '@kitware/vtk.js/Rendering/Misc/GenericRenderWindow'
-import vtkInteractorStyleMPRSlice from './vtkInteractorStyleMPRSlice'
 
-class vtkSliceView {
+class vtkView3D {
   root: HTMLElement
   genericRenderWindow: vtkGenericRenderWindow
 
@@ -12,7 +12,7 @@ class vtkSliceView {
     this.root = root
 
     this.genericRenderWindow = vtkGenericRenderWindow.newInstance({
-      background: [0.1, 0.1, 0.2],
+      background: [0.1, 0.2, 0.3],
       listenWindowResize: true
     })
 
@@ -25,7 +25,7 @@ class vtkSliceView {
     const renderer = this.genericRenderWindow.getRenderer()
     const renderWindow = this.genericRenderWindow.getRenderWindow()
 
-    renderer.getActiveCamera().setParallelProjection(true)
+    renderer.getActiveCamera().setParallelProjection(false)
     renderWindow.render()
   }
 
@@ -43,25 +43,27 @@ class vtkSliceView {
     // FIXME: custom range mapping
     const rgbTransferFunction = volumeActor.getProperty().getRGBTransferFunction(0)
     rgbTransferFunction.setMappingRange(dataRange[0], dataRange[1])
-    // rgbTransferFunction.applyColorMap(vtkColorMaps.getPresetByName(vtkColorMaps.rgbPresetNames[0]))
+    // rgbTransferFunction.applyColorMap(vtkColorMaps.getPresetByName(vtkColorMaps.rgbPresetNames[1]))
+
+    const aTransferFunction = volumeActor.getProperty().getGrayTransferFunction(0)
+    // aTransferFunction.setRange(dataRange[0], dataRange[1])
+    aTransferFunction.addPoint(dataRange[1], 0)
+    aTransferFunction.addPoint(dataRange[1], 0)
 
     const renderer = this.genericRenderWindow.getRenderer()
     const renderWindow = this.genericRenderWindow.getRenderWindow()
     renderer.addActor(volumeActor)
     renderer.resetCamera()
 
-    const mprStyle = vtkInteractorStyleMPRSlice.newInstance()
-    mprStyle.setInteractor(renderWindow.getInteractor())
-    renderWindow.getInteractor().setInteractorStyle(mprStyle)
+    // const mprStyle = vtkInteractorStyleMPRSlice.newInstance()
+    // mprStyle.setInteractor(renderWindow.getInteractor())
+    // renderWindow.getInteractor().setInteractorStyle(mprStyle)
 
-    mprStyle.setVolumeMapper(volumeMapper)
-    mprStyle.setSliceNormal([0, 0, 1])
-
-    console.log('slice range', mprStyle.getSliceRange())
-    console.log('normal', mprStyle.getSliceNormal())
+    // mprStyle.setVolumeMapper(volumeMapper)
+    // mprStyle.setSliceNormal([0, 0, 1])
 
     renderWindow.render()
   }
 }
 
-export default vtkSliceView
+export default vtkView3D
