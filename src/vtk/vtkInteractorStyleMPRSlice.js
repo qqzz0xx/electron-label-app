@@ -79,7 +79,7 @@ function InteractorStyleMPRSlice(publicAPI, model) {
     publicAPI.removeAllMouseManipulators()
     // publicAPI.addMouseManipulator(model.trackballManipulator)
     // publicAPI.addMouseManipulator(model.panManipulator)
-    // publicAPI.addMouseManipulator(model.zoomManipulator)
+    publicAPI.addMouseManipulator(model.zoomManipulator)
     publicAPI.addMouseManipulator(model.scrollManipulator)
     updateScrollManipulator()
 
@@ -129,7 +129,14 @@ function InteractorStyleMPRSlice(publicAPI, model) {
     const bounds = model.volumeMapper.getBounds()
     const volumePos = [worldPos[0] - bounds[0], worldPos[1] - bounds[2], worldPos[2] - bounds[4]]
 
-    console.log(bounds, pos, worldPos, volumePos)
+    // const viewToWorld = renderer.GetViewToWorldTransform()
+    // console.log(model.volumeMapper.getInputData().getDirection(), model.volumeMapper.getInputData().getOrigin(),  model.volumeMapper.getInputData().getBounds())
+
+    // console.log('displayPos', pos)
+    // console.log(worldPos, volumePos)
+
+    const onLeftButtonPress = publicAPI.getOnLeftButtonPress()
+    if (onLeftButtonPress) onLeftButtonPress(ev)
   })
 
   const superSetVolumeMapper = publicAPI.setVolumeMapper
@@ -323,7 +330,7 @@ export function extend(publicAPI, model, initialValues = {}) {
   // Inheritance
   vtkInteractorStyleManipulator.extend(publicAPI, model, initialValues)
 
-  macro.setGet(publicAPI, model, ['volumeMapper', 'onScroll'])
+  macro.setGet(publicAPI, model, ['volumeMapper', 'onScroll', 'onLeftButtonPress'])
   macro.get(publicAPI, model, ['viewUp'])
 
   // Object specific methods
